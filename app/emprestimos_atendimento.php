@@ -1,3 +1,5 @@
+
+
 <?php
 // Inclua sua conexão com o banco de dados aqui
 require_once 'conexao_db.php';
@@ -108,4 +110,4 @@ ORDER BY
 } catch (PDOException $e) {
     echo "Erro: " . $e->getMessage();
 }
-?>
+

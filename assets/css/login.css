@@ -1,37 +1,17 @@
-/* Barra de navegação */
-header, .navbar {
-    background-color: #255AFF;
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    background-color: #007bff; /* Azul */
 }
 
-#nav-container {
-    padding-top: 0;
-    padding-bottom: 0;
+#logout {
+    margin-left: auto; 
 }
 
 #logo {
     width: 85px;
-}
-
-.navbar-brand {
-    padding: 0;
-    color: #d5d5d5;
-}
-
-.navbar-brand:hover {
-    color: #FFF;
-}
-
-#navbar-links a {
-    height: 100%;
-    color: #0e0e0e;
-}
-
-/* Estilo do Header */
-.text-header {
-    padding: 2px;
-    text-align: center;
-    color: #F1F1F1;
-    background-color: #0e0e0e;
 }
 
 /* Main */

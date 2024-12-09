@@ -1,3 +1,5 @@
+
+
 <?php
 // Incluir a conexão ao banco de dados
 require_once 'conexao_db.php';
@@ -87,16 +89,16 @@ $sqlObservacoes = "
     INNER JOIN 
         TiposObservacao c ON a.cdTipoObservacao = c.cdTipoObservacao
     WHERE 
-        a.cdPlano = :cdPlanoObservacao
+        a.cdPlano = :cdPlano
     ORDER BY  
         CONVERT(date, a.dtCadastro, 103) DESC, 
         c.nmTipoObservacao;
 ";
 
 $stmtObservacoes = $pdo->prepare($sqlObservacoes);
-$stmtObservacoes->bindParam(':cdPlanoObservacao', $cdPlano, PDO::PARAM_INT);
+$stmtObservacoes->bindParam(':cdPlano', $cdPlano, PDO::PARAM_INT);
 $stmtObservacoes->execute();
 $resultadosObservacoes = $stmtObservacoes->fetchAll(PDO::FETCH_ASSOC);
 
 
-?>
+

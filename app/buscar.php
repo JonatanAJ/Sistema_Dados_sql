@@ -1,3 +1,5 @@
+
+
 <?php
 session_start();
 
@@ -7,6 +9,10 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+
+
+
+
 // Conectar ao banco SQL Server com base nas credenciais da sessão
 if (isset($_SESSION['sqlsrv_credentials'])) {
     $servername_sqlsrv = $_SESSION['sqlsrv_credentials']['servername'];
@@ -14,7 +20,13 @@ if (isset($_SESSION['sqlsrv_credentials'])) {
     $username_sqlsrv = $_SESSION['sqlsrv_credentials']['username'];
     $password_sqlsrv = $_SESSION['sqlsrv_credentials']['password'];
 
+
+
+    
+    
+
     try {
+
         // Conectar ao SQL Server
         $conn_sqlsrv = new PDO("sqlsrv:Server=$servername_sqlsrv;Database=$database_sqlsrv", $username_sqlsrv, $password_sqlsrv);
         $conn_sqlsrv->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -30,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $codigo = trim($_POST['codigo']);
     
     // Constrói a consulta de acordo com os campos preenchidos
-    $sql = "SELECT * FROM Pessoas WHERE 1=1"; // Base da consulta
+    $sql = "SELECT * FROM Pessoas WHERE 1=1"; 
     $params = [];
 
     if (!empty($nome)) {
@@ -49,9 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Se encontrado, redireciona para pagina_dados.php passando o cdPessoa
     if ($resultado) {
-        $_SESSION['cdPessoa'] = $resultado['cdPessoa'];  // Armazenando cdPessoa na sessão
+        $_SESSION['cdPessoa'] = $resultado['cdPessoa'];  
         header('Location: ../public/pagina_dados.php');  
         exit;
     }
 }
-?>
+
+
+
+

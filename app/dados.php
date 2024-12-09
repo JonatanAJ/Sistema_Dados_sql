@@ -3,6 +3,8 @@
 // Inclui a conexão com o banco de dados
 require_once 'conexao_db.php';
 
+
+
 // Função para obter os dados da pessoa, endereço e plano
 function getDadosPessoa($pdo, $cdPessoa) {
     // Verifica se o $pdo e $cdPessoa são válidos
@@ -136,18 +138,14 @@ try {
     // Verificar se a conexão PDO foi criada corretamente
     $pdo = createConnection(); // Chama a função de criação da conexão PDO
 
-    
     if (isset($_SESSION['cdPessoa']) && !empty($_SESSION['cdPessoa'])) {
         $cdPessoa = $_SESSION['cdPessoa']; 
         // Aqui, você pode chamar a função para buscar os dados
         list($pessoa, $endereco, $dadosPlano) = getDadosPessoa($pdo, $cdPessoa);
     } else {
-        echo "Código da pessoa não fornecidoo.";
+        echo "Código da pessoa não fornecido.";
     }
-    
-    
 } catch (PDOException $e) {
     echo "Erro ao conectar ao banco de dados: " . $e->getMessage();
 }
-
 ?>

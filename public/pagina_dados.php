@@ -2,12 +2,11 @@
 
 
 require_once '../app/conexao_db.php';
+require_once '../app/session_config.php';
 include '../app/dados.php';
 include '../app/financeiro.php';
 include '../app/beneficiarios.php';
 include '../app/emprestimos_atendimento.php';
-
-
 ?>
 
 
@@ -18,7 +17,7 @@ include '../app/emprestimos_atendimento.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Dados</title>
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
    
 </head>
@@ -27,7 +26,7 @@ include '../app/emprestimos_atendimento.php';
 
 <nav class="navbar navbar-expand-lg navbar-light d-flex justify-content-between">
     <a class="navbar-brand text-white" href="#">HF Solucoes</a>
-    <button id="logout" class="btn btn-danger" onclick="window.location.href='../app/logout.php';">Sair</button>
+    <button id="logout" class="btn btn-danger" onclick="window.location.href='../assets/logout.php';">Sair</button>
 </nav>
 
 
@@ -35,21 +34,22 @@ include '../app/emprestimos_atendimento.php';
     <div class="container">
         <h1 class="text-center mt-4">Formulários</h1>
         <div class="text-center mb-4">
-            <div class="button-container">
-                <button class="btn btn-primary" onclick="showForm('identificacao')">Identificação</button>
-                <button class="btn btn-primary" onclick="showForm('dados')">Dados</button>
-                <button class="btn btn-primary" onclick="showForm('beneficiarios')">Beneficiarios</button>
-                <button class="btn btn-primary" onclick="showForm('observacoes')">observacoes</button>
-                <button class="btn btn-primary" onclick="showForm('emprestimos')">emprestimos</button>
-                <button class="btn btn-primary" onclick="showForm('atendimento')">atendimento</button>
-                <button class="btn btn-primary" id="mainButton" onclick="toggleSubButtons()">Financeiro</button>
-                <div class="sub-buttons">
-                    <button class="btn btn-secondary" onclick="showForm('parcelas')">Parcelas</button>
-                    <button class="btn btn-secondary" onclick="showForm('acordos')">Acordos</button>
-                    <button class="btn btn-secondary" onclick="showForm('adicional')">Adicional</button>
-                    <button class="btn btn-secondary" onclick="showForm('servicos')">Servicos</button>
-                </div>
-            </div>
+        <div class="button-container">
+    <button class="btn btn-primary" onclick="showForm('identificacao')">Identificação</button>
+    <button class="btn btn-primary" onclick="showForm('dados')">Dados</button>
+    <button class="btn btn-primary" onclick="showForm('beneficiarios')">Beneficiarios</button>
+    <button class="btn btn-primary" onclick="showForm('observacoes')">Observações</button>
+    <button class="btn btn-primary" onclick="showForm('emprestimos')">Empréstimos</button>
+    <button class="btn btn-primary" onclick="showForm('atendimento')">Atendimento</button>
+    <button class="btn btn-primary" id="mainButton" onclick="toggleSubButtons(); showForm('parcelas');">Financeiro</button>
+    <div class="sub-buttons">
+        <button class="btn btn-secondary" onclick="showForm('parcelas')">Parcelas</button>
+        <button class="btn btn-secondary" onclick="showForm('acordos')">Acordos</button>
+        <button class="btn btn-secondary" onclick="showForm('adicional')">Adicional</button>
+        <button class="btn btn-secondary" onclick="showForm('servicos')">Serviços</button>
+    </div>
+</div>
+
 
             <div id="formsContainer">
 
@@ -61,7 +61,7 @@ include '../app/emprestimos_atendimento.php';
                                 <div class="col-md-6 form-group">
                                     <label for="ID_contrato">Código:</label>
 
-                                    <input type="text" class="form-control" id="ID_contrato" value="0<?php echo htmlspecialchars($pessoa['cdPlano']); ?>" disabled>
+                                    <input type="text" class="form-control" id="ID_contrato" value="<?php echo htmlspecialchars($pessoa['cdPlano']); ?>" disabled>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="CPF_CNPJ">CPF/CNPJ:</label>
@@ -324,7 +324,9 @@ include '../app/emprestimos_atendimento.php';
                                 <?php
 foreach ($resultadosBeneficiarios as $beneficiarios) {
     $DadoBeneficiario = $beneficiarios;
-    
+
+   
+                    
     // Define a cor baseada no valor de carência
     $carencia = $DadoBeneficiario['carencia']; // Assume que você já tem essa lógica aplicada no SQL
     $cor = ''; // Inicializa a variável de cor
@@ -354,6 +356,8 @@ foreach ($resultadosBeneficiarios as $beneficiarios) {
                 $cor = 'transparent'; // Para valores inesperados
         }
     }
+
+
 ?>
     <tr>
         <td class="st-col" style="background-color: <?php echo $cor; ?>;" value="<?php echo $DadoBeneficiario['carencia']; ?>">
@@ -393,15 +397,15 @@ foreach ($resultadosBeneficiarios as $beneficiarios) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach ($resultadosAtendimento as $atendimento) {
+                                    foreach ($resultadosObservacoes as $observacoes) {
                                      
                                     ?>
                                         <tr>
                                            
-                                            <td><?php echo $atendimento['nmTipoObservacao'] ?></td>
-                                            <td><?php echo $atendimento['tituloObservacao'] ?></td>
-                                            <td><?php echo $atendimento['dtCadastro'] ?></td>
-                                            <td><?php echo $atendimento['nmUsuario'] ?></td>
+                                            <td><?php echo $observacoes['nmTipoObservacao'] ?></td>
+                                            <td><?php echo $observacoes['tituloObservacao'] ?></td>
+                                            <td><?php echo $observacoes['dtCadastro'] ?></td>
+                                            <td><?php echo $observacoes['nmUsuario'] ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -545,30 +549,30 @@ foreach ($dadosFinanceiros['parcelas'] as $parcelas) {
 
     // Verifica se a parcela está vencida e ainda não foi paga
     if ($dataParcela < $dataAtual && $status == 1) {
-        $corClasse = 'status-vencido'; // Vermelho para parcelas vencidas
+        $corClasse = 'red'; // Vermelho para parcelas vencidas
     } else {
         // Define a cor com base no status
         switch ($status) {
             case 0:
-                $corClasse = 'status-cancelado'; // Preto
+                $corClasse = 'black'; // Preto
                 break;
             case 1:
-                $corClasse = 'status-ativo'; // Azul Ciano
+                $corClasse = 'cyan'; // Azul Ciano
                 break;
             case 2:
-                $corClasse = 'status-pago'; // Verde
+                $corClasse = 'green'; // Verde
                 break;
             case 3:
-                $corClasse = 'status-acordo-cancelado'; // Cinza
+                $corClasse = 'gray'; // Cinza
                 break;
             case 4:
-                $corClasse = 'status-acordo'; // Cinza
+                $corClasse = 'gray'; // Cinza
                 break;
         }
     }
 ?>
     <tr>
-        <td class="st-col <?php echo $corClasse; ?>"></td>
+        <td class="st-col" style="background-color: <?php echo $corClasse; ?>;"></td>
         <td><?php echo $parcelas['dsMovimentoConta']; ?></td>
         <td><?php echo $parcelas['numCompetencia']; ?></td>
         <td><?php echo $parcelas['dtParcela']; ?></td>
@@ -623,7 +627,7 @@ foreach ($dadosFinanceiros['parcelas'] as $parcelas) {
                                     ?>
 
                                         <tr>
-                                            <td class="st-col <?php echo $corClasse; ?>"> <?php echo $corClasse; ?></td>
+                                           
 
                                             <td><?php echo $acordo['cdAcordoPlano']; ?></td>
                                             <td><?php echo $acordo['dtAcordoPlano']; ?></td>
@@ -656,10 +660,8 @@ foreach ($dadosFinanceiros['parcelas'] as $parcelas) {
                         <th scope="col">Descrição</th>
                         <th scope="col">Beneficiário</th>
                         <th scope="col">Início</th>
-                      
+                        <th scope="col">Termino</th>
                         <th scope="col">R$ Valor</th>
-                        <th scope="col">Observação</th>
-                        <th scope="col">Data Cadastro</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -671,33 +673,33 @@ foreach ($dadosFinanceiros['parcelas'] as $parcelas) {
                     // Determinar cor com base no cdStatus
                     switch ($adicional['competencias']) {
                         case 1: // Cancelado
-                            $statusComp = 'status-vencido'; // Vermelho
+                            $statusComp = 'green'; // Verde
                             break;
                         case 3: // Cobrando
-                            $statusComp = 'status-cobrando'; // Verde
+                            $statusComp = 'yellow'; // Amarelo
                             break;
                         case 2: // A cobrar
-                            $statusComp = 'status-ativo'; // Azul
+                            $statusComp = 'cyan'; // Azul
                             break;
                         case 4: // Acordo Finalizado
-                            $statusComp= 'status-acordo'; // Amarelo
+                            $statusComp= 'red'; // Vermelho
                             break;
                         default:
-                            $statusComp= 'status-desconhecido'; // Classe adicional para outros casos
+                            $statusComp= 'gray'; // Classe adicional para outros casos
                             break;
                     }
 
                     
                 ?>
+
                     <tr>
                         <!-- Célula colorida -->
-                        <td class="st-col <?php echo $statusComp; ?>"></td>
+                        <td class="st-col" style="background-color: <?php echo $statusComp; ?>;"></td>
                         <td><?php echo $adicional['nmTipoAdicional']; ?></td>
                         <td><?php echo $adicional['nmPessoa']; ?></td>
                         <td><?php echo $adicional['dsCompetencia']; ?></td>
-                        <td><?php echo number_format($adicional['vlAdicionalPlano'], 2, ',', '.'); ?></td>
-                        <td><?php echo $adicional['obsAdicionalPlano']; ?></td>
-                        <td><?php echo $adicional['dtCadastro']; ?></td>
+                       <td><?php echo $adicional['dsCompetenciaFinal']; ?></td>
+                         <td><?php echo number_format($adicional['vlAdicionalPlano'], 2, ',', '.'); ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>
@@ -742,20 +744,20 @@ foreach ($dadosFinanceiros['parcelas'] as $parcelas) {
                     // Determinar cor com base no cdStatus
                     switch ($servico['nmStatusMovimentacaoPlanoConta']) {
                         case 'cancelado': 
-                            $corStatus = 'status-vencido'; // Vermelho
+                            $corStatus = 'red'; // Vermelho
                             break;
                         case 'PAGO': 
-                            $corStatus = 'status-pago'; // Verde
+                            $corStatus = 'green'; // Verde
                             break;
                         case 'ativo': 
-                            $corStatus = 'status-ativo'; // Azul
+                            $corStatus = 'cyan'; // Azul
                             break;
                         case 'acordo': 
-                            $corStatus = 'status-acordo'; // Amarelo
+                            $corStatus = 'yellow'; // Amarelo
                             break;
                         default:
                         case 'Acordo - Cancelado':
-                            $corStatus = 'status-acordo-cancelado'; // Classe adicional para outros casos
+                            $corStatus = 'gray'; // Classe adicional para outros casos
                             break;
                     }
                 
@@ -766,7 +768,7 @@ foreach ($dadosFinanceiros['parcelas'] as $parcelas) {
                                   
 
 <tr>
-<td class="st-col <?php echo $corStatus; ?>"></td>
+<td class="st-col" style="background-color: <?php echo $corStatus; ?>;"></td>
     <td><?php echo $servico['dsMovimentoConta']; ?></td>
     <td><?php echo $servico['numCompetencia']; ?></td>
     <td><?php echo $servico['dtLancamento']; ?></td>
@@ -792,21 +794,7 @@ foreach ($dadosFinanceiros['parcelas'] as $parcelas) {
             </div>
         </div>
 
-        <script>
-            function showForm(formId) {
-                const forms = document.querySelectorAll('.tab-pane');
-                forms.forEach(form => {
-                    form.classList.remove('active');
-                });
-                document.getElementById(formId).classList.add('active');
-            }
-
-            function toggleSubButtons() {
-                const mainButton = document.getElementById('mainButton');
-                const buttonContainer = mainButton.closest('.button-container');
-                buttonContainer.classList.toggle('show-sub-buttons');
-            }
-            document.addEventListener('DOMContentLoaded', () => {
-                showForm('identificacao');
-            });
-        </script>
+        <script src="../Assets/javascript/scripts.js"></script>
+            
+ </body>
+</html> 

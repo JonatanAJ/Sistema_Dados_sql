@@ -1,0 +1,41 @@
+# Bloquear o acesso a todos os arquivos PHP por padrão
+<Files "*.php">
+    Require all denied
+</Files>
+
+# Permitir o acesso apenas ao arquivo de logout
+<Files "logout.php">
+    Require all granted
+</Files>
+
+# Impedir o acesso a arquivos sensíveis e não acessíveis por HTTP
+<FilesMatch "^(.*\.(htaccess|htpasswd|ini|log|env|phps|fpm|git|bak|old))$">
+    Require all denied
+</FilesMatch>
+
+# Impedir a execução de arquivos PHP em diretórios não permitidos (ex: uploads)
+<Directory "/path/to/your/uploads">
+    <Files "*.php">
+        Require all denied
+    </Files>
+</Directory>
+
+# Impedir a navegação por diretórios (evitar listagem)
+Options -Indexes
+
+# Definir cabeçalhos de segurança adicionais para proteger contra ataques comuns
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+# Remover o X-Frame-Options temporariamente para testar o logout
+# Header always append X-Frame-Options SAMEORIGIN
+
+# Prevenir ataques de HTTP Response Splitting e modificar cabeçalhos de segurança
+Header set X-Powered-By "PHP/7.4.3"  # Defina a versão PHP usada ou remova completamente este cabeçalho
+
+# Configurar uma política de segurança de conteúdo (Content Security Policy - CSP)
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; object-src 'none';"
+
+# Impedir o acesso ao arquivo .htaccess (impede que alguém leia o .htaccess)
+<Files ".htaccess">
+    Require all denied
+</Files>

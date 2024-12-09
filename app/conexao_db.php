@@ -1,11 +1,30 @@
 <?php
 session_start();
 
+// Verificar se o autoload do Composer está carregado
+if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    die("O arquivo autoload.php não foi encontrado. Verifique se o Composer está configurado corretamente.");
+}
+
+// Carregar variáveis de ambiente do .env
+require_once __DIR__ . '/../vendor/autoload.php';
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();  // Carregar as variáveis do .env
+
+// Testar o carregamento do .env
+if (!$_ENV['MYSQL_SERVERNAME']) {
+    die("Erro ao carregar as variáveis de ambiente. Verifique o arquivo .env.");
+}
+
+
 // Verificar se o usuário está logado
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['cdPessoa'])) {
     header('Location: ../public/pagina_login.php');
     exit;
 }
+
 
 // Obter cdPessoa da sessão
 $cdPessoa = $_SESSION['cdPessoa'];
@@ -13,8 +32,7 @@ $cdPessoa = $_SESSION['cdPessoa'];
 // Verificar se as credenciais SQL Server já estão carregadas na sessão
 if (!isset($_SESSION['sqlsrv_credentials'])) {
     // Conectar ao banco MySQL para obter as credenciais do SQL Server
-    $mysqli = new mysqli("localhost", "root", "", "login");
-
+    $mysqli = new mysqli($_ENV['MYSQL_SERVERNAME'], $_ENV['MYSQL_USERNAME'], $_ENV['MYSQL_PASSWORD'], $_ENV['MYSQL_DATABASE']);
     if ($mysqli->connect_error) {
         die("Erro de conexão com o MySQL: " . $mysqli->connect_error);
     }
@@ -137,4 +155,3 @@ function formatarCEP($cep) {
         return $cep;
     }
 }
-?>
